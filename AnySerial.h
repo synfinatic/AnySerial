@@ -68,8 +68,8 @@ class AnySerial : public Stream {
 #ifdef AltSoftSerial_h
         AnySerial(AltSoftSerial *port);
 #endif
-#ifdef NewSoftSerial_h
-        AnySerial(NewSoftSerial *port);
+#ifdef SoftwareSerial_h
+        AnySerial(SoftwareSerial *port);
 #endif
         ~AnySerial();
         void end();
