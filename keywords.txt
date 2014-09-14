@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map for AnySerial
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+AnySerial	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+end	KEYWORD2
+begin	KEYWORD2
+peek	KEYWORD2
+read	KEYWORD2
+available	KEYWORD2
+listen	KEYWORD2
+isListening	KEYWORD2
+write	KEYWORD2
+print	KEYWORD2
+printf	KEYWORD2
+flush	KEYWORD2
+flushInput	KEYWORD2
+flushOutput	KEYWORD2
+overflow	KEYWORD2
+library_version	KEYWORD2
