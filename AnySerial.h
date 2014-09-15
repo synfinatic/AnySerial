@@ -103,6 +103,7 @@ class AnySerial : public Stream {
         void flushOutput();
         bool overflow();
         int library_version();
+        int readBytesUntil(char, char *, int);
 private:
         anyserial_t port_type;
         serialport_t serialport;

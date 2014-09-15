@@ -459,3 +459,30 @@ AnySerial::writeByte(uint8_t byte) {
             break;
     }
 }
+
+
+int 
+AnySerial::readBytesUntil(char watch, char *buff, int len) {
+    int ret = 0;
+    switch(port_type) {
+#ifdef AltSoftSerial_h
+        case anyserial_altsoft:
+            ret = serialport.altsoft->readBytesUntil(watch, buff, len);
+            break;
+#endif
+#ifdef SoftwareSerial_h
+        case anyserial_soft:
+            ret = serialport.soft->readBytesUntil(watch, buff, len);
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            ret = serialport.usb->readBytesUntil(watch, buff, len);
+            break;
+#endif
+        case anyserial_hardware:
+            serialport.hardware->readBytesUntil(watch, buff, len);
+            break;
+    }
+    return ret;
+}
