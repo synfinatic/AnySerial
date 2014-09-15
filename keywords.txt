@@ -12,6 +12,7 @@ AnySerial	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+attach	KEYWORD2
 end	KEYWORD2
 begin	KEYWORD2
 peek	KEYWORD2

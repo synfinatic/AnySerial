@@ -41,6 +41,7 @@
  */
 
 #include <HardwareSerial.h>
+#include <Arduino.h>
 
 typedef enum {
 #ifdef AltSoftSerial_h
@@ -49,11 +50,17 @@ typedef enum {
 #ifdef SoftwareSerial_h
     anyserial_soft,
 #endif
+#ifdef USBserial_h_
+    anyserial_usb,
+#endif
     anyserial_hardware
 } anyserial_t;
 
 typedef union {
     HardwareSerial *hardware;
+#ifdef USBserial_h_
+    usb_serial_class *usb;
+#endif
 #ifdef AltSoftSerial_h
     AltSoftSerial *altsoft;
 #endif
@@ -64,12 +71,20 @@ typedef union {
 
 class AnySerial : public Stream {
     public:
+        AnySerial() { };
         AnySerial(HardwareSerial *port);
+        void attach(HardwareSerial *port);
 #ifdef AltSoftSerial_h
         AnySerial(AltSoftSerial *port);
+        void attach(AltSoftSerial *port);
 #endif
 #ifdef SoftwareSerial_h
         AnySerial(SoftwareSerial *port);
+        void attach(SoftwareSerial *port);
+#endif
+#ifdef USBserial_h_
+        AnySerial(usb_serial_class *port);
+        void attach(usb_serial_class *port);
 #endif
         ~AnySerial();
         void end();

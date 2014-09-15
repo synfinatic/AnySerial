@@ -1,5 +1,4 @@
 #include "AnySerial.h"
-#include "Arduino.h"
 
 /*
  * AnySerial - Wrapper class for HardwareSerial, SoftwareSerial & AltSoftSerial
@@ -46,8 +45,34 @@ AnySerial::AnySerial(HardwareSerial *port) {
     port_type = anyserial_hardware;
 }
 
+void 
+AnySerial::attach(HardwareSerial *port) {
+    serialport.hardware = port;
+    port_type = anyserial_hardware;
+}
+
+
+#ifdef USBserial_h_
+AnySerial::AnySerial(usb_serial_class *port) {
+    serialport.usb = port;
+    port_type = anyserial_usb;
+}
+
+void
+AnySerial::attach(usb_serial_class *port) {
+    serialport.usb = port;
+    port_type = anyserial_usb;
+}
+#endif
+
 #ifdef AltSoftSerial_h
 AnySerial::AnySerial(AltSoftSerial *port) {
+    serialport.altsoft = port;
+    port_type = anyserial_altsoft;
+}
+
+void
+AnySerial::attach(AltSoftSerial *port) {
     serialport.altsoft = port;
     port_type = anyserial_altsoft;
 }
@@ -55,6 +80,12 @@ AnySerial::AnySerial(AltSoftSerial *port) {
 
 #ifdef SoftwareSerial_h
 AnySerial::AnySerial(SoftwareSerial *port) {
+    serialport.soft = port;
+    port_type = anyserial_soft;
+}
+
+void
+AnySerial::attach(SoftwareSerial *port) {
     serialport.soft = port;
     port_type = anyserial_soft;
 }
@@ -71,6 +102,11 @@ AnySerial::begin(uint32_t baud) {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             serialport.soft->begin(baud);
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->begin(baud);
             break;
 #endif
         case anyserial_hardware:
@@ -93,6 +129,11 @@ AnySerial::end() {
             serialport.soft->end();
             break;
 #endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->end();
+            break;
+#endif
         case anyserial_hardware:
             serialport.hardware->end();
             break;
@@ -112,6 +153,11 @@ AnySerial::peek() {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             ret = serialport.soft->peek();
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->peek();
             break;
 #endif
         case anyserial_hardware:
@@ -136,6 +182,11 @@ AnySerial::read() {
             ret = serialport.soft->read();
             break;
 #endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->read();
+            break;
+#endif
         case anyserial_hardware:
             ret = serialport.hardware->read();
             break;
@@ -156,6 +207,11 @@ AnySerial::available() {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             ret = serialport.soft->available();
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->available();
             break;
 #endif
         case anyserial_hardware:
@@ -179,6 +235,11 @@ AnySerial::flushInput() {
             serialport.soft->flushInput();
             break;
 #endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            // not implimented
+            break;
+#endif
         case anyserial_hardware:
             // not implimented
             break;
@@ -196,6 +257,11 @@ AnySerial::flushOutput() {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             serialport.soft->flushOutput();
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            // not implimented
             break;
 #endif
         case anyserial_hardware:
@@ -217,6 +283,11 @@ AnySerial::listen() {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             ret = serialport.soft->listen();
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            // not implimented
             break;
 #endif
         case anyserial_hardware:
@@ -241,6 +312,11 @@ AnySerial::isListening() {
             ret = serialport.soft->isListening();
             break;
 #endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            // not implimented
+            break;
+#endif
         case anyserial_hardware:
             // not implimented
             break;
@@ -263,6 +339,11 @@ AnySerial::overflow() {
             ret = serialport.soft->overflow();
             break;
 #endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            // not implimented
+            break;
+#endif
         case anyserial_hardware:
             // not implimented
             break;
@@ -283,6 +364,11 @@ AnySerial::library_version() {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             ret = serialport.soft->library_version();
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            // not implimented
             break;
 #endif
         case anyserial_hardware:
@@ -308,6 +394,11 @@ AnySerial::write(char *str) {
             ret = serialport.soft->write(str);
             break;
 #endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->write(str);
+            break;
+#endif
         case anyserial_hardware:
             ret = serialport.hardware->write(str);
             break;
@@ -327,6 +418,11 @@ AnySerial::write(const uint8_t *buff, size_t len) {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             ret = serialport.soft->write(buff, len);
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->write(buff, len);
             break;
 #endif
         case anyserial_hardware:
@@ -351,6 +447,11 @@ AnySerial::writeByte(uint8_t byte) {
 #ifdef SoftwareSerial_h
         case anyserial_soft:
             serialport.soft->write(&byte, 1);
+            break;
+#endif
+#ifdef USBserial_h_
+        case anyserial_usb:
+            serialport.usb->write(&byte, 1);
             break;
 #endif
         case anyserial_hardware:
