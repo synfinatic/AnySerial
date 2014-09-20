@@ -49,7 +49,6 @@ void
 AnySerial::attach(HardwareSerial *port) {
     serialport.hardware = port;
     port_type = anyserial_hardware;
-    Serial.println("Attached HardwareSerial");
 }
 
 // USBSerial
@@ -63,7 +62,6 @@ void
 AnySerial::attach(usb_serial_class *port) {
     serialport.usb = port;
     port_type = anyserial_usb;
-    Serial.println("Attached USBserial_h_");
 }
 #endif
 
