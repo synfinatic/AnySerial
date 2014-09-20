@@ -39,7 +39,7 @@
  * Serial1, etc)
  */
 
-
+// HardwareSerial
 AnySerial::AnySerial(HardwareSerial *port) {
     serialport.hardware = port;
     port_type = anyserial_hardware;
@@ -49,9 +49,10 @@ void
 AnySerial::attach(HardwareSerial *port) {
     serialport.hardware = port;
     port_type = anyserial_hardware;
+    Serial.println("Attached HardwareSerial");
 }
 
-
+// USBSerial
 #ifdef USBserial_h_
 AnySerial::AnySerial(usb_serial_class *port) {
     serialport.usb = port;
@@ -62,6 +63,7 @@ void
 AnySerial::attach(usb_serial_class *port) {
     serialport.usb = port;
     port_type = anyserial_usb;
+    Serial.println("Attached USBserial_h_");
 }
 #endif
 
@@ -157,7 +159,7 @@ AnySerial::peek() {
 #endif
 #ifdef USBserial_h_
         case anyserial_usb:
-            serialport.usb->peek();
+            ret = serialport.usb->peek();
             break;
 #endif
         case anyserial_hardware:
@@ -184,7 +186,7 @@ AnySerial::read() {
 #endif
 #ifdef USBserial_h_
         case anyserial_usb:
-            serialport.usb->read();
+            ret = serialport.usb->read();
             break;
 #endif
         case anyserial_hardware:
@@ -211,7 +213,7 @@ AnySerial::available() {
 #endif
 #ifdef USBserial_h_
         case anyserial_usb:
-            serialport.usb->available();
+            ret = serialport.usb->available();
             break;
 #endif
         case anyserial_hardware:
@@ -396,7 +398,7 @@ AnySerial::write(char *str) {
 #endif
 #ifdef USBserial_h_
         case anyserial_usb:
-            serialport.usb->write(str);
+            ret = serialport.usb->write(str);
             break;
 #endif
         case anyserial_hardware:
@@ -422,7 +424,7 @@ AnySerial::write(const uint8_t *buff, size_t len) {
 #endif
 #ifdef USBserial_h_
         case anyserial_usb:
-            serialport.usb->write(buff, len);
+            ret = serialport.usb->write(buff, len);
             break;
 #endif
         case anyserial_hardware:
