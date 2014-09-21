@@ -486,3 +486,35 @@ AnySerial::readBytesUntil(char watch, char *buff, int len) {
     }
     return ret;
 }
+
+/*
+ * What kind of port are we?
+ */
+anyserial_t
+AnySerial::get_port_type() {
+    return port_type;
+}
+
+/*
+ * Return our port.  Has to be a void * because, how would you know what it is?
+ * You'll need to cast it to the right thing based on get_port_type()
+ */
+void *
+AnySerial::port() {
+    switch (port_type) {
+        case anyserial_hardware:
+            return serialport.hardware;
+#ifdef USBSerial_h_
+        case anyserial_usb:
+            return serialport.usb;
+#endif
+#ifdef AltSoftSerial_h
+        case anyserial_altsoft:
+            return serialport.altsoft;
+#endif
+#ifdef SoftwareSerial_h
+        case anyserial_soft:
+            return serialport.soft;
+#endif
+    }
+}

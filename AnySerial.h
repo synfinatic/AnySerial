@@ -44,15 +44,10 @@
 #include <Arduino.h>
 
 typedef enum {
-#ifdef AltSoftSerial_h
+    anyserial_none = 0,
     anyserial_altsoft,
-#endif
-#ifdef SoftwareSerial_h
     anyserial_soft,
-#endif
-#ifdef USBserial_h_
     anyserial_usb,
-#endif
     anyserial_hardware
 } anyserial_t;
 
@@ -87,6 +82,7 @@ class AnySerial : public Stream {
         void attach(usb_serial_class *port);
 #endif
         ~AnySerial();
+        void *port();
         void end();
         void begin(uint32_t baud);
         int peek();
@@ -104,6 +100,7 @@ class AnySerial : public Stream {
         bool overflow();
         int library_version();
         int readBytesUntil(char, char *, int);
+        anyserial_t get_port_type();
 private:
         anyserial_t port_type;
         serialport_t serialport;
