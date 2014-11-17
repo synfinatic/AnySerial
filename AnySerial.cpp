@@ -43,12 +43,14 @@
 AnySerial::AnySerial(HardwareSerial *port) {
     serialport.hardware = port;
     port_type = anyserial_hardware;
+    debug_flag = 0;
 }
 
 void 
 AnySerial::attach(HardwareSerial *port) {
     serialport.hardware = port;
     port_type = anyserial_hardware;
+    debug_flag = 0;
 }
 
 // USBSerial
@@ -56,12 +58,14 @@ AnySerial::attach(HardwareSerial *port) {
 AnySerial::AnySerial(usb_serial_class *port) {
     serialport.usb = port;
     port_type = anyserial_usb;
+    debug_flag = 0;
 }
 
 void
 AnySerial::attach(usb_serial_class *port) {
     serialport.usb = port;
     port_type = anyserial_usb;
+    debug_flag = 0;
 }
 #endif
 
@@ -69,12 +73,14 @@ AnySerial::attach(usb_serial_class *port) {
 AnySerial::AnySerial(AltSoftSerial *port) {
     serialport.altsoft = port;
     port_type = anyserial_altsoft;
+    debug_flag = 0;
 }
 
 void
 AnySerial::attach(AltSoftSerial *port) {
     serialport.altsoft = port;
     port_type = anyserial_altsoft;
+    debug_flag = 0;
 }
 #endif
 
@@ -82,6 +88,7 @@ AnySerial::attach(AltSoftSerial *port) {
 AnySerial::AnySerial(SoftwareSerial *port) {
     serialport.soft = port;
     port_type = anyserial_soft;
+    debug_flag = 0;
 }
 
 void
@@ -192,6 +199,9 @@ AnySerial::read() {
             break;
     }
 
+    if (ret && debug_flag == 1 && debug_port != NULL) {
+        debug_port->write((uint8_t)ret);
+    }
     return ret;
 }
 
@@ -403,6 +413,9 @@ AnySerial::write(char *str) {
             ret = serialport.hardware->write(str);
             break;
     }
+    if (ret && debug_flag == 1 && debug_port != NULL) {
+        debug_port->write(str);
+    }
     return ret;
 }
 
@@ -428,6 +441,9 @@ AnySerial::write(const uint8_t *buff, size_t len) {
         case anyserial_hardware:
             ret = serialport.hardware->write(buff, len);
             break;
+    }
+    if (ret && debug_flag == 1 && debug_port != NULL) {
+        debug_port->write(buff, len);
     }
     return ret;
 }
@@ -458,6 +474,9 @@ AnySerial::writeByte(uint8_t byte) {
             serialport.hardware->write(&byte, 1);
             break;
     }
+    if (debug_flag == 1 && debug_port != NULL) {
+        debug_port->write(&byte, 1);
+    }
 }
 
 
@@ -483,6 +502,9 @@ AnySerial::readBytesUntil(char watch, char *buff, int len) {
         case anyserial_hardware:
             serialport.hardware->readBytesUntil(watch, buff, len);
             break;
+    }
+    if (ret && debug_flag == 1 && debug_port != NULL) {
+        debug_port->write(buff, ret);
     }
     return ret;
 }
@@ -517,4 +539,27 @@ AnySerial::port() {
             return serialport.soft;
 #endif
     }
+}
+
+void
+AnySerial::attach_debug(AnySerial *port) {
+    debug_port = port;
+}
+
+int 
+AnySerial::debug(int onoff = -1) {
+    switch (onoff) {
+        case -1:
+            return debug_flag;
+            break;
+        case 0:
+            debug_flag = 0;
+            return 0;
+            break;
+        case 1:
+            debug_flag = 1;
+            return 1;
+            break;
+    }
+    return -1;
 }

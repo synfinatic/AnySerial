@@ -88,6 +88,7 @@ class AnySerial : public Stream {
         int peek();
         int read();
         int available();
+        void attach_debug(AnySerial *port);
         bool listen();
         bool isListening();
         size_t write(char *str);
@@ -98,12 +99,15 @@ class AnySerial : public Stream {
         void flushInput();
         void flushOutput();
         bool overflow();
+        int debug(int onoff);
         int library_version();
         int readBytesUntil(char, char *, int);
         anyserial_t get_port_type();
 private:
+        int debug_flag;
         anyserial_t port_type;
         serialport_t serialport;
         void writeByte(uint8_t byte);
+        AnySerial *debug_port;
 };
 #endif
