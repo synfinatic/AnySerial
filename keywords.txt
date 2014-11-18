@@ -18,6 +18,7 @@ begin	KEYWORD2
 peek	KEYWORD2
 read	KEYWORD2
 available	KEYWORD2
+attach_debug KEYWORD2
 listen	KEYWORD2
 isListening	KEYWORD2
 write	KEYWORD2
@@ -27,4 +28,9 @@ flush	KEYWORD2
 flushInput	KEYWORD2
 flushOutput	KEYWORD2
 overflow	KEYWORD2
+debug KEYWORD12
 library_version	KEYWORD2
+port KEYWORD2
+readBytesUntil KEYWORD2
+get_port_type KEYWORD2
+
