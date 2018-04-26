@@ -538,6 +538,8 @@ AnySerial::port() {
         case anyserial_soft:
             return serialport.soft;
 #endif
+        default:
+            return NULL;
     }
 }
 

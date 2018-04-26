@@ -45,10 +45,15 @@
 #include <Arduino.h>
 
 typedef enum {
-    anyserial_none = 0,
+#ifdef AltSoftSerial_h
     anyserial_altsoft,
+#endif
+#ifdef SoftwareSerial_h
     anyserial_soft,
+#endif
+#ifdef USBserial_h_
     anyserial_usb,
+#endif
     anyserial_hardware
 } anyserial_t;
 
