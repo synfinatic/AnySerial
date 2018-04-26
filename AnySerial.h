@@ -41,7 +41,6 @@
  */
 
 #include <HardwareSerial.h>
-#include <SoftwareSerial.h>
 #include <Arduino.h>
 
 typedef enum {
@@ -116,4 +115,51 @@ private:
         void writeByte(uint8_t byte);
         AnySerial *debug_port;
 };
+
+#ifdef SoftwareSerial_h
+AnySerial::AnySerial(SoftwareSerial *port) {
+    serialport.soft = port;
+    port_type = anyserial_soft;
+    debug_flag = 0;
+}
+
+void
+AnySerial::attach(SoftwareSerial *port) {
+    serialport.soft = port;
+    port_type = anyserial_soft;
+}
+#endif
+
+#ifdef AltSoftSerial_h
+AnySerial::AnySerial(AltSoftSerial *port) {
+    serialport.altsoft = port;
+    port_type = anyserial_altsoft;
+    debug_flag = 0;
+}
+
+void
+AnySerial::attach(AltSoftSerial *port) {
+    serialport.altsoft = port;
+    port_type = anyserial_altsoft;
+    debug_flag = 0;
+}
+#endif
+
+// USBSerial
+#ifdef USBserial_h_
+AnySerial::AnySerial(usb_serial_class *port) {
+    serialport.usb = port;
+    port_type = anyserial_usb;
+    debug_flag = 0;
+}
+
+void
+AnySerial::attach(usb_serial_class *port) {
+    serialport.usb = port;
+    port_type = anyserial_usb;
+    debug_flag = 0;
+}
+#endif
+
+
 #endif
