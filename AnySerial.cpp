@@ -16,26 +16,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Wrapper class around:
  * SoftwareSerial
  * AltSoftSerial
  * HardwareSerial (Serial, Serial[123])
  *
- * The goal of AnySerial is to make writing libraries which 
+ * The goal of AnySerial is to make writing libraries which
  * use the serial port more cross platform and easier to use.
  *
- * Rather then hard coding a specific Serial port or pins, 
- * you can now just accept an AnySerial object to your 
- * constructor and you don't care what what kind of serial 
+ * Rather then hard coding a specific Serial port or pins,
+ * you can now just accept an AnySerial object to your
+ * constructor and you don't care what what kind of serial
  * port it is (hardware or serial), you can just interact
  * with it normally.
  *
  * Just be sure to import the necessary SoftwareSerial.h or
- * AltSoftSerial.h BEFORE importing AnySerial.h so that 
+ * AltSoftSerial.h BEFORE importing AnySerial.h so that
  * AnySerial will be compiled with the necessary support.
  *
- * AnySerial always supports hardware serial ports (Serial, 
+ * AnySerial always supports hardware serial ports (Serial,
  * Serial1, etc)
  */
 
@@ -46,26 +46,24 @@ AnySerial::AnySerial(HardwareSerial *port) {
     debug_flag = 0;
 }
 
-void 
+void
 AnySerial::attach(HardwareSerial *port) {
     serialport.hardware = port;
     port_type = anyserial_hardware;
     debug_flag = 0;
 }
 
-// USBSerial
-#ifdef USBserial_h_
-AnySerial::AnySerial(usb_serial_class *port) {
-    serialport.usb = port;
-    port_type = anyserial_usb;
+#ifdef SoftwareSerial_h
+AnySerial::AnySerial(SoftwareSerial *port) {
+    serialport.soft = port;
+    port_type = anyserial_soft;
     debug_flag = 0;
 }
 
 void
-AnySerial::attach(usb_serial_class *port) {
-    serialport.usb = port;
-    port_type = anyserial_usb;
-    debug_flag = 0;
+AnySerial::attach(SoftwareSerial *port) {
+    serialport.soft = port;
+    port_type = anyserial_soft;
 }
 #endif
 
@@ -84,22 +82,24 @@ AnySerial::attach(AltSoftSerial *port) {
 }
 #endif
 
-#ifdef SoftwareSerial_h
-AnySerial::AnySerial(SoftwareSerial *port) {
-    serialport.soft = port;
-    port_type = anyserial_soft;
+// USBSerial
+#ifdef USBserial_h_
+AnySerial::AnySerial(usb_serial_class *port) {
+    serialport.usb = port;
+    port_type = anyserial_usb;
     debug_flag = 0;
 }
 
 void
-AnySerial::attach(SoftwareSerial *port) {
-    serialport.soft = port;
-    port_type = anyserial_soft;
+AnySerial::attach(usb_serial_class *port) {
+    serialport.usb = port;
+    port_type = anyserial_usb;
+    debug_flag = 0;
 }
 #endif
 
 void
-AnySerial::begin(uint32_t baud) { 
+AnySerial::begin(uint32_t baud) {
     switch (port_type) {
 #ifdef AltSoftSerial_h
         case anyserial_altsoft:
@@ -122,8 +122,7 @@ AnySerial::begin(uint32_t baud) {
     }
 }
 
-
-void 
+void
 AnySerial::end() {
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -148,7 +147,7 @@ AnySerial::end() {
 
 }
 
-int 
+int
 AnySerial::peek() {
     int ret = -1;
     switch (port_type) {
@@ -205,7 +204,7 @@ AnySerial::read() {
     return ret;
 }
 
-int 
+int
 AnySerial::available() {
     int ret = 0;
     switch (port_type) {
@@ -232,7 +231,7 @@ AnySerial::available() {
     return ret;
 }
 
-void 
+void
 AnySerial::flushInput() {
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -242,7 +241,7 @@ AnySerial::flushInput() {
 #endif
 #ifdef SoftwareSerial_h
         case anyserial_soft:
-            serialport.soft->flushInput();
+            // not implemented
             break;
 #endif
 #ifdef USBserial_h_
@@ -256,7 +255,7 @@ AnySerial::flushInput() {
     }
 }
 
-void 
+void
 AnySerial::flushOutput() {
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -266,7 +265,7 @@ AnySerial::flushOutput() {
 #endif
 #ifdef SoftwareSerial_h
         case anyserial_soft:
-            serialport.soft->flushOutput();
+            // not implemented
             break;
 #endif
 #ifdef USBserial_h_
@@ -281,8 +280,8 @@ AnySerial::flushOutput() {
 }
 
 
-bool 
-AnySerial::listen() { 
+bool
+AnySerial::listen() {
     bool ret = true;
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -308,8 +307,8 @@ AnySerial::listen() {
     return ret;
 }
 
-bool 
-AnySerial::isListening() { 
+bool
+AnySerial::isListening() {
     bool ret = false;
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -335,8 +334,8 @@ AnySerial::isListening() {
     return ret;
 }
 
-bool 
-AnySerial::overflow() { 
+bool
+AnySerial::overflow() {
     bool ret = false;
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -362,8 +361,8 @@ AnySerial::overflow() {
     return ret;
 }
 
-int 
-AnySerial::library_version() { 
+int
+AnySerial::library_version() {
     int ret = 0;
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -373,7 +372,7 @@ AnySerial::library_version() {
 #endif
 #ifdef SoftwareSerial_h
         case anyserial_soft:
-            ret = serialport.soft->library_version();
+            // not implemented
             break;
 #endif
 #ifdef USBserial_h_
@@ -390,7 +389,7 @@ AnySerial::library_version() {
 }
 
 
-size_t 
+size_t
 AnySerial::write(char *str) {
     size_t ret = 0;
     switch (port_type) {
@@ -419,7 +418,7 @@ AnySerial::write(char *str) {
     return ret;
 }
 
-size_t 
+size_t
 AnySerial::write(const uint8_t *buff, size_t len) {
     size_t ret = 0;
     switch (port_type) {
@@ -448,11 +447,7 @@ AnySerial::write(const uint8_t *buff, size_t len) {
     return ret;
 }
 
-AnySerial::~AnySerial() {
-    end();
-}
-
-void 
+void
 AnySerial::writeByte(uint8_t byte) {
     switch (port_type) {
 #ifdef AltSoftSerial_h
@@ -480,7 +475,7 @@ AnySerial::writeByte(uint8_t byte) {
 }
 
 
-int 
+int
 AnySerial::readBytesUntil(char watch, char *buff, int len) {
     int ret = 0;
     switch(port_type) {
@@ -510,14 +505,6 @@ AnySerial::readBytesUntil(char watch, char *buff, int len) {
 }
 
 /*
- * What kind of port are we?
- */
-anyserial_t
-AnySerial::get_port_type() {
-    return port_type;
-}
-
-/*
  * Return our port.  Has to be a void * because, how would you know what it is?
  * You'll need to cast it to the right thing based on get_port_type()
  */
@@ -538,15 +525,31 @@ AnySerial::port() {
         case anyserial_soft:
             return serialport.soft;
 #endif
+        default:
+            return NULL;
     }
 }
+
+
+AnySerial::~AnySerial() {
+    end();
+}
+
+/*
+ * What kind of port are we?
+ */
+anyserial_t
+AnySerial::get_port_type() {
+    return port_type;
+}
+
 
 void
 AnySerial::attach_debug(AnySerial *port) {
     debug_port = port;
 }
 
-int 
+int
 AnySerial::debug(int onoff = -1) {
     switch (onoff) {
         case -1:

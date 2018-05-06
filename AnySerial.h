@@ -17,37 +17,43 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Wrapper class around:
  * SoftwareSerial
  * AltSoftSerial
  * HardwareSerial (Serial, Serial[123])
  *
- * The goal of AnySerial is to make writing libraries which 
+ * The goal of AnySerial is to make writing libraries which
  * use the serial port more cross platform and easier to use.
  *
- * Rather then hard coding a specific Serial port or pins, 
- * you can now just accept an AnySerial object to your 
- * constructor and you don't care what what kind of serial 
+ * Rather then hard coding a specific Serial port or pins,
+ * you can now just accept an AnySerial object to your
+ * constructor and you don't care what what kind of serial
  * port it is (hardware or serial), you can just interact
  * with it normally.
  *
  * Just be sure to import the necessary SoftwareSerial.h or
- * AltSoftSerial.h BEFORE importing AnySerial.h so that 
+ * AltSoftSerial.h BEFORE importing AnySerial.h so that
  * AnySerial will be compiled with the necessary support.
  *
- * AnySerial always supports hardware serial ports (Serial, 
+ * AnySerial always supports hardware serial ports (Serial,
  * Serial1, etc)
  */
 
 #include <HardwareSerial.h>
+#include <SoftwareSerial.h>
 #include <Arduino.h>
 
 typedef enum {
-    anyserial_none = 0,
+#ifdef AltSoftSerial_h
     anyserial_altsoft,
+#endif
+#ifdef SoftwareSerial_h
     anyserial_soft,
+#endif
+#ifdef USBserial_h_
     anyserial_usb,
+#endif
     anyserial_hardware
 } anyserial_t;
 
@@ -110,4 +116,5 @@ private:
         void writeByte(uint8_t byte);
         AnySerial *debug_port;
 };
+
 #endif
