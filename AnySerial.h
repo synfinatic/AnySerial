@@ -48,7 +48,8 @@ typedef enum {
     anyserial_altsoft,
     anyserial_soft,
     anyserial_usb,
-    anyserial_hardware
+    anyserial_hardware,
+    anyserial_atmegaXXu4
 } anyserial_t;
 
 typedef union {
@@ -62,7 +63,10 @@ typedef union {
 #ifdef SoftwareSerial_h
     SoftwareSerial *soft;
 #endif
+#ifdef __USBAPI__
+    Serial_ *atmega_usb;
 } serialport_t;
+#endif
 
 class AnySerial : public Stream {
     public:
@@ -80,6 +84,10 @@ class AnySerial : public Stream {
 #ifdef USBserial_h_
         AnySerial(usb_serial_class *port);
         void attach(usb_serial_class *port);
+#endif
+#ifdef __USBAPI__
+        AnySerial(Serial_ *port);
+        void attach(Serial_ *port);
 #endif
         ~AnySerial();
         void *port();

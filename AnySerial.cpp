@@ -69,6 +69,21 @@ AnySerial::attach(usb_serial_class *port) {
 }
 #endif
 
+#ifdef __USBAPI__
+AnySerial::AnySerial(Serial_ *port) {
+    serialport.atmega_usb = port;
+    port_type = anyserial_atmegaXXu4;
+    debug_flag = 0;
+}
+
+void
+AnySerial::attach(Serial_ *port) {
+    serialport.atmega_usb = port;
+    port_type = anyserial_atmegaXXu4;
+    debug_flag = 0;
+}
+#endif
+
 #ifdef AltSoftSerial_h
 AnySerial::AnySerial(AltSoftSerial *port) {
     serialport.altsoft = port;
@@ -116,6 +131,11 @@ AnySerial::begin(uint32_t baud) {
             serialport.usb->begin(baud);
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            serialport.atmega_usb->begin(baud);
+            break;
+#endif
         case anyserial_hardware:
             serialport.hardware->begin(baud);
             break;
@@ -139,6 +159,11 @@ AnySerial::end() {
 #ifdef USBserial_h_
         case anyserial_usb:
             serialport.usb->end();
+            break;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            serialport.atmega_usb->end();
             break;
 #endif
         case anyserial_hardware:
@@ -167,6 +192,11 @@ AnySerial::peek() {
             ret = serialport.usb->peek();
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            ret = serialport.atmega_usb->peek();
+            break;
+#endif
         case anyserial_hardware:
             ret = serialport.hardware->peek();
             break;
@@ -192,6 +222,11 @@ AnySerial::read() {
 #ifdef USBserial_h_
         case anyserial_usb:
             ret = serialport.usb->read();
+            break;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            ret = serialport.atmega_usb->read();
             break;
 #endif
         case anyserial_hardware:
@@ -224,6 +259,11 @@ AnySerial::available() {
             ret = serialport.usb->available();
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            ret = serialport.atmega_usb->available();
+            break;
+#endif
         case anyserial_hardware:
             ret = serialport.hardware->available();
             break;
@@ -250,6 +290,11 @@ AnySerial::flushInput() {
             // not implimented
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            // not implemented
+            break;
+#endif
         case anyserial_hardware:
             // not implimented
             break;
@@ -272,6 +317,11 @@ AnySerial::flushOutput() {
 #ifdef USBserial_h_
         case anyserial_usb:
             // not implimented
+            break;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            // not implemented
             break;
 #endif
         case anyserial_hardware:
@@ -298,6 +348,11 @@ AnySerial::listen() {
 #ifdef USBserial_h_
         case anyserial_usb:
             // not implimented
+            break;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            // not implemented
             break;
 #endif
         case anyserial_hardware:
@@ -327,6 +382,11 @@ AnySerial::isListening() {
             // not implimented
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            // not implemented
+            break;
+#endif
         case anyserial_hardware:
             // not implimented
             break;
@@ -354,6 +414,11 @@ AnySerial::overflow() {
             // not implimented
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            // not implemented
+            break;
+#endif
         case anyserial_hardware:
             // not implimented
             break;
@@ -379,6 +444,11 @@ AnySerial::library_version() {
 #ifdef USBserial_h_
         case anyserial_usb:
             // not implimented
+            break;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            // not implemented
             break;
 #endif
         case anyserial_hardware:
@@ -409,6 +479,11 @@ AnySerial::write(char *str) {
             ret = serialport.usb->write(str);
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            ret = serialport.atmega_usb->write(str);
+            break;
+#endif
         case anyserial_hardware:
             ret = serialport.hardware->write(str);
             break;
@@ -436,6 +511,11 @@ AnySerial::write(const uint8_t *buff, size_t len) {
 #ifdef USBserial_h_
         case anyserial_usb:
             ret = serialport.usb->write(buff, len);
+            break;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            ret = serialport.atmega_usb->write(buff, len);
             break;
 #endif
         case anyserial_hardware:
@@ -470,6 +550,11 @@ AnySerial::writeByte(uint8_t byte) {
             serialport.usb->write(&byte, 1);
             break;
 #endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            serialport.atmega_usb->write(&byte, 1);
+            break;
+#endif
         case anyserial_hardware:
             serialport.hardware->write(&byte, 1);
             break;
@@ -497,6 +582,11 @@ AnySerial::readBytesUntil(char watch, char *buff, int len) {
 #ifdef USBserial_h_
         case anyserial_usb:
             ret = serialport.usb->readBytesUntil(watch, buff, len);
+            break;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            serialport.atmega_usb->readBytesUntil(watch, buff, len);
             break;
 #endif
         case anyserial_hardware:
@@ -529,6 +619,11 @@ AnySerial::port() {
 #ifdef USBSerial_h_
         case anyserial_usb:
             return serialport.usb;
+#endif
+#ifdef __USBAPI__
+        case anyserial_atmegaXXu4:
+            return serialport.atmega_usb;
+            break;
 #endif
 #ifdef AltSoftSerial_h
         case anyserial_altsoft:
