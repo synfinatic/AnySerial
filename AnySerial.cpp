@@ -69,7 +69,7 @@ AnySerial::attach(usb_serial_class *port) {
 }
 #endif
 
-#ifdef __USBAPI__
+#ifdef USBCON
 AnySerial::AnySerial(Serial_ *port) {
     serialport.atmega_usb = port;
     port_type = anyserial_atmegaXXu4;
@@ -131,7 +131,7 @@ AnySerial::begin(uint32_t baud) {
             serialport.usb->begin(baud);
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             serialport.atmega_usb->begin(baud);
             break;
@@ -161,7 +161,7 @@ AnySerial::end() {
             serialport.usb->end();
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             serialport.atmega_usb->end();
             break;
@@ -192,7 +192,7 @@ AnySerial::peek() {
             ret = serialport.usb->peek();
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             ret = serialport.atmega_usb->peek();
             break;
@@ -224,7 +224,7 @@ AnySerial::read() {
             ret = serialport.usb->read();
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             ret = serialport.atmega_usb->read();
             break;
@@ -259,7 +259,7 @@ AnySerial::available() {
             ret = serialport.usb->available();
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             ret = serialport.atmega_usb->available();
             break;
@@ -290,7 +290,7 @@ AnySerial::flushInput() {
             // not implimented
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             // not implemented
             break;
@@ -319,7 +319,7 @@ AnySerial::flushOutput() {
             // not implimented
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             // not implemented
             break;
@@ -350,7 +350,7 @@ AnySerial::listen() {
             // not implimented
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             // not implemented
             break;
@@ -382,7 +382,7 @@ AnySerial::isListening() {
             // not implimented
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             // not implemented
             break;
@@ -414,7 +414,7 @@ AnySerial::overflow() {
             // not implimented
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             // not implemented
             break;
@@ -446,7 +446,7 @@ AnySerial::library_version() {
             // not implimented
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             // not implemented
             break;
@@ -479,7 +479,7 @@ AnySerial::write(char *str) {
             ret = serialport.usb->write(str);
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             ret = serialport.atmega_usb->write(str);
             break;
@@ -513,7 +513,7 @@ AnySerial::write(const uint8_t *buff, size_t len) {
             ret = serialport.usb->write(buff, len);
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             ret = serialport.atmega_usb->write(buff, len);
             break;
@@ -550,7 +550,7 @@ AnySerial::writeByte(uint8_t byte) {
             serialport.usb->write(&byte, 1);
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             serialport.atmega_usb->write(&byte, 1);
             break;
@@ -584,7 +584,7 @@ AnySerial::readBytesUntil(char watch, char *buff, int len) {
             ret = serialport.usb->readBytesUntil(watch, buff, len);
             break;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             serialport.atmega_usb->readBytesUntil(watch, buff, len);
             break;
@@ -620,7 +620,7 @@ AnySerial::port() {
         case anyserial_usb:
             return serialport.usb;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         case anyserial_atmegaXXu4:
             return serialport.atmega_usb;
             break;

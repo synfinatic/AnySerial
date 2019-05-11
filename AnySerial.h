@@ -63,7 +63,7 @@ typedef union {
 #ifdef SoftwareSerial_h
     SoftwareSerial *soft;
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
     Serial_ *atmega_usb;
 } serialport_t;
 #endif
@@ -85,7 +85,7 @@ class AnySerial : public Stream {
         AnySerial(usb_serial_class *port);
         void attach(usb_serial_class *port);
 #endif
-#ifdef __USBAPI__
+#ifdef USBCON
         AnySerial(Serial_ *port);
         void attach(Serial_ *port);
 #endif
